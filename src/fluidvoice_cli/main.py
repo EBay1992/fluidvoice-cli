@@ -96,7 +96,18 @@ def doctor_cmd(ctx: typer.Context) -> None:
 def transcribe_cmd(
     ctx: typer.Context,
     file: Annotated[Path, typer.Argument(help="Media file to transcribe.")],
-    output: Annotated[Path | None, typer.Option("-o", "--output")] = None,
+    output: Annotated[
+        Path | None,
+        typer.Option(
+            "-o",
+            "--output",
+            help="Custom output path (default: same name .txt beside file).",
+        ),
+    ] = None,
+    stdout: Annotated[
+        bool,
+        typer.Option("--stdout", help="Print transcript to terminal instead of saving a file."),
+    ] = False,
     no_chunking: Annotated[bool, typer.Option("--no-chunking")] = False,
 ) -> None:
     """Transcribe a single audio or video file."""
@@ -105,6 +116,7 @@ def transcribe_cmd(
         _resolve_settings(ctx),
         output=output,
         use_chunking=not no_chunking,
+        to_stdout=stdout,
     )
 
 

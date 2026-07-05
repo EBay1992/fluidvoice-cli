@@ -2,18 +2,13 @@ name: CI
 
 on:
   push:
-    paths:
-      - "fluidvoice-cli/**"
+    branches: [main]
   pull_request:
-    paths:
-      - "fluidvoice-cli/**"
+    branches: [main]
 
 jobs:
   test-linux:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: fluidvoice-cli
     strategy:
       matrix:
         python-version: ["3.11", "3.12", "3.13"]
@@ -31,9 +26,6 @@ jobs:
 
   test-macos:
     runs-on: macos-latest
-    defaults:
-      run:
-        working-directory: fluidvoice-cli
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -43,5 +35,7 @@ jobs:
         run: brew install ffmpeg
       - name: Install package and dev deps
         run: pip install -e ".[dev]"
-      - name: Pytest (with media tests)
-        run: pytest --cov=fluidvoice_cli
+      - name: Ruff
+        run: ruff check src tests
+      - name: Pytest
+        run: pytest --cov=fluidvoice_cli --cov-report=term-missing

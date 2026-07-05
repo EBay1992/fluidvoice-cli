@@ -14,9 +14,10 @@ from fluidvoice_cli.media import probe_duration, transcribe_with_chunking
 from fluidvoice_cli.output import (
     emit_json,
     is_json_mode,
+    log_batch_success,
     log_error,
     log_info,
-    log_success,
+    log_transcribe_success,
     progress_bar,
 )
 
@@ -59,6 +60,8 @@ def run_batch(
 
     history_cache: dict[str, str] = {}
     failed = 0
+    transcribed = 0
+    skipped = 0
     results: list[dict[str, object]] = []
 
     with FluidVoiceClient(settings) as client:
@@ -85,6 +88,7 @@ def run_batch(
                             "output": str(txt_path),
                         }
                     )
+                    skipped += 1
                     progress.advance(task)
                     continue
 
@@ -126,7 +130,12 @@ def run_batch(
 
                     txt_path.write_text(text + "\n", encoding="utf-8")
                     if not is_json_mode():
-                        log_success(f"  saved {txt_path.name} ({len(text)} chars)")
+                        log_transcribe_success(
+                            input_path=media_file,
+                            output_path=txt_path,
+                            chars=len(text),
+                            source=source,
+                        )
                     results.append(
                         {
                             "file": str(media_file),
@@ -136,6 +145,7 @@ def run_batch(
                             "source": source,
                         }
                     )
+                    transcribed += 1
                 except FluidVoiceError as exc:
                     failed += 1
                     if not is_json_mode():
@@ -150,7 +160,24 @@ def run_batch(
                 progress.advance(task)
 
     if is_json_mode():
-        emit_json({"total": len(files), "failed": failed, "results": results})
+        emit_json(
+            {
+                "status": "success" if failed == 0 else "partial",
+                "message": "Batch complete",
+                "total": len(files),
+                "transcribed": transcribed,
+                "skipped": skipped,
+                "failed": failed,
+                "results": results,
+            }
+        )
+    else:
+        log_batch_success(
+            transcribed=transcribed,
+            skipped=skipped,
+            failed=failed,
+            total=len(files),
+        )
 
     if failed:
         raise typer.Exit(EXIT_PARTIAL_BATCH_FAILURE)

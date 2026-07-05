@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sys
+from pathlib import Path
 from typing import Any
 
 from rich.console import Console
@@ -48,6 +49,35 @@ def log_success(message: str) -> None:
     get_console().print(f"[green]{message}[/green]")
 
 
+def log_transcribe_success(
+    *,
+    input_path: Path,
+    output_path: Path,
+    chars: int,
+    source: str = "api",
+) -> None:
+    """Print a clear success summary after transcription."""
+    if _json_mode:
+        emit_json(
+            {
+                "status": "success",
+                "message": "Transcription complete",
+                "input": str(input_path),
+                "output": str(output_path),
+                "chars": chars,
+                "source": source,
+            }
+        )
+        return
+    console = get_console()
+    console.print("[bold green]✓ Transcription complete[/bold green]")
+    console.print(f"  [dim]Input:[/dim]  {input_path.name}")
+    console.print(f"  [dim]Output:[/dim] {output_path}")
+    console.print(f"  [dim]Size:[/dim]   {chars:,} characters")
+    if source == "history_cache":
+        console.print("  [dim]Source:[/dim] FluidVoice history cache")
+
+
 def log_warning(message: str) -> None:
     if _json_mode:
         return
@@ -66,6 +96,23 @@ def log_error(message: str, *, hint: str | None = None) -> None:
     if hint:
         for line in hint.split("\n"):
             console.print(f"  [dim]→ {line}[/dim]")
+
+
+def log_batch_success(*, transcribed: int, skipped: int, failed: int, total: int) -> None:
+    """Print a summary after batch transcription."""
+    if _json_mode:
+        return
+    console = get_console()
+    console.print()
+    console.print("[bold green]✓ Batch complete[/bold green]")
+    console.print(f"  [dim]Total:[/dim]       {total} files")
+    console.print(f"  [dim]Transcribed:[/dim] {transcribed}")
+    if skipped:
+        console.print(f"  [dim]Skipped:[/dim]     {skipped} (already exist)")
+    if failed:
+        console.print(f"  [red]Failed:[/red]       {failed}")
+    else:
+        console.print("  [dim]Failed:[/dim]       0")
 
 
 def progress_bar(description: str = "Working") -> Progress:

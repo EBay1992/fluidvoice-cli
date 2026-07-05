@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "fluidvoice-cli"
-version = "0.1.0"
+version = "0.1.1"
 description = "Professional CLI for FluidVoice Local API — batch transcription, history, and dictionary tools"
 readme = "README.md"
 license = { text = "MIT" }

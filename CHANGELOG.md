@@ -1,3 +1,15 @@
+## [0.1.1] - 2026-07-05
+
+### Fixed
+
+- GitHub Actions CI workflow (correct repo root paths)
+
+### Added
+
+- Success messages after transcribe and batch jobs
+- Default output: `.txt` beside source file with same name
+- `--stdout` flag to print transcript instead of saving
+
 ## [0.1.0] - 2026-07-05
 
 ### Added
