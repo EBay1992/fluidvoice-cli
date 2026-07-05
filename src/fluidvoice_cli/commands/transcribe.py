@@ -10,7 +10,7 @@ from fluidvoice_cli.client import FluidVoiceClient
 from fluidvoice_cli.config import Settings
 from fluidvoice_cli.errors import FluidVoiceError
 from fluidvoice_cli.media import probe_duration, transcribe_with_chunking
-from fluidvoice_cli.output import is_json_mode, log_info, log_transcribe_success, write_stdout
+from fluidvoice_cli.output import is_json_mode, log_transcribe_success, log_verbose, write_stdout
 
 
 def default_output_path(source: Path) -> Path:
@@ -42,11 +42,11 @@ def run_transcribe(
                 duration = probe_duration(file)
                 mode = "chunked" if duration > settings.max_direct_seconds else "direct"
                 if not is_json_mode():
-                    log_info(f"Transcribing {file.name} ({duration:.0f}s, {mode})")
+                    log_verbose(f"Transcribing {file.name} ({duration:.0f}s, {mode})")
 
                 def on_chunk(i: int, total: int) -> None:
                     if not is_json_mode():
-                        log_info(f"  chunk {i}/{total}")
+                        log_verbose(f"  chunk {i}/{total}")
 
                 text = transcribe_with_chunking(
                     file,
@@ -73,5 +73,5 @@ def run_transcribe(
                 chars=len(text),
             )
         return 0
-    except FluidVoiceError as exc:
-        raise typer.Exit(exc.exit_code) from exc
+    except FluidVoiceError:
+        raise

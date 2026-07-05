@@ -1,3 +1,13 @@
+## [0.1.2] - 2026-07-05
+
+### Fixed
+
+- `dict list-words` — parse FluidVoice API schema (`text`, `aliases`, `weight`)
+- Human-readable output for `doctor`, `history list`, `config show`, and `dict` (console was incorrectly muted unless `--verbose`)
+- `history list` — show `finalText` / `windowTitle` when `fileName` is empty
+- `postprocess` — friendly error message when no AI provider is configured
+- Errors now route through `run()` for clean messages instead of tracebacks
+
 ## [0.1.1] - 2026-07-05
 
 ### Fixed

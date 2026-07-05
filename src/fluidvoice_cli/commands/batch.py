@@ -18,6 +18,7 @@ from fluidvoice_cli.output import (
     log_error,
     log_info,
     log_transcribe_success,
+    log_verbose,
     progress_bar,
 )
 
@@ -68,7 +69,7 @@ def run_batch(
         if use_history_cache:
             history_cache = load_history_cache(client, limit=settings.history_limit)
             if history_cache and not is_json_mode():
-                log_info(f"Loaded {len(history_cache)} history cache entries")
+                log_verbose(f"Loaded {len(history_cache)} history cache entries")
 
         progress = progress_bar("Batch transcribe")
         with progress:
@@ -80,7 +81,7 @@ def run_batch(
                 min_bytes = settings.skip_existing_min_bytes
                 if skip_existing and txt_path.exists() and txt_path.stat().st_size > min_bytes:
                     if not is_json_mode():
-                        log_info(f"[{idx}/{len(files)}] skip existing: {media_file.name}")
+                        log_verbose(f"[{idx}/{len(files)}] skip existing: {media_file.name}")
                     results.append(
                         {
                             "file": str(media_file),
@@ -104,7 +105,7 @@ def run_batch(
                         text = cached
                         source = "history_cache"
                         if not is_json_mode():
-                            log_info("  using history cache")
+                            log_verbose("  using history cache")
                     else:
 
                         def do_transcribe(path: Path) -> str:
@@ -113,11 +114,11 @@ def run_batch(
                         duration = probe_duration(media_file)
                         mode = "chunked" if duration > settings.max_direct_seconds else "direct"
                         if not is_json_mode():
-                            log_info(f"  {mode} transcribe ({duration:.0f}s)")
+                            log_verbose(f"  {mode} transcribe ({duration:.0f}s)")
 
                         def on_chunk(i: int, total: int) -> None:
                             if not is_json_mode():
-                                log_info(f"    chunk {i}/{total}")
+                                log_verbose(f"    chunk {i}/{total}")
 
                         text = transcribe_with_chunking(
                             media_file,

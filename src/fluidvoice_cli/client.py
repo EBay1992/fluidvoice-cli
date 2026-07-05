@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 import httpx
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, model_validator
 
 from fluidvoice_cli.config import Settings
 from fluidvoice_cli.errors import APIError, FluidNotRunningError, TranscribeError
@@ -38,10 +38,20 @@ class PostprocessResponse(BaseModel):
 
 
 class DictionaryWord(BaseModel):
-    word: str
+    word: str = ""
+    text: str | None = None
     definition: str | None = None
+    aliases: list[str] = Field(default_factory=list)
+    weight: int | None = None
 
     model_config = {"extra": "allow"}
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_word_field(cls, data: Any) -> Any:
+        if isinstance(data, dict) and not data.get("word") and data.get("text"):
+            data = {**data, "word": data["text"]}
+        return data
 
 
 class ReplacementRule(BaseModel):
@@ -88,7 +98,16 @@ class FluidVoiceClient:
 
         if response.status_code >= 400:
             detail = response.text[:500] if response.text else response.reason_phrase
-            raise APIError(response.status_code, detail or "unknown error")
+            hint: str | None = None
+            try:
+                body = response.json()
+                if isinstance(body, dict) and body.get("error"):
+                    detail = str(body["error"])
+                    if "AI provider" in detail:
+                        hint = "Open FluidVoice → Settings → AI and select a verified provider"
+            except Exception:
+                pass
+            raise APIError(response.status_code, detail or "unknown error", hint=hint)
 
         if not response.content:
             return {}
@@ -148,7 +167,10 @@ class FluidVoiceClient:
         data = self._request("POST", "/postprocess", json=payload)
         result = PostprocessResponse.model_validate(data)
         if result.error and not result.text:
-            raise APIError(500, result.error)
+            hint = None
+            if "AI provider" in result.error:
+                hint = "Open FluidVoice → Settings → AI and select a verified provider"
+            raise APIError(400, result.error, hint=hint)
         return result.text.strip()
 
     def list_custom_words(self, *, limit: int = 100) -> list[DictionaryWord]:

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "fluidvoice-cli"
-version = "0.1.1"
+version = "0.1.2"
 description = "Professional CLI for FluidVoice Local API — batch transcription, history, and dictionary tools"
 readme = "README.md"
 license = { text = "MIT" }
@@ -41,7 +41,7 @@ dev = [
 ]
 
 [project.scripts]
-fluidvoice = "fluidvoice_cli.main:app"
+fluidvoice = "fluidvoice_cli.main:run"
 
 [project.urls]
 Homepage = "https://github.com/altic-dev/FluidVoice"

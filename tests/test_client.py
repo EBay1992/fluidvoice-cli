@@ -10,7 +10,7 @@ import respx
 
 from fluidvoice_cli.client import FluidVoiceClient
 from fluidvoice_cli.config import Settings
-from fluidvoice_cli.errors import FluidNotRunningError, TranscribeError
+from fluidvoice_cli.errors import APIError, FluidNotRunningError, TranscribeError
 
 
 @pytest.fixture
@@ -92,3 +92,41 @@ def test_dictionary_add_word(settings: Settings) -> None:
     with FluidVoiceClient(settings) as client:
         client.add_custom_word("Kubernetes", "container platform")
     assert route.called
+
+
+@respx.mock
+def test_list_custom_words_fluid_schema(settings: Settings) -> None:
+    respx.get("http://127.0.0.1:47733/v1/dictionary/custom-words").mock(
+        return_value=httpx.Response(
+            200,
+            json={
+                "count": 1,
+                "items": [
+                    {
+                        "text": "FluidVoice",
+                        "aliases": ["fluid voice"],
+                        "weight": 10,
+                    }
+                ],
+            },
+        )
+    )
+    with FluidVoiceClient(settings) as client:
+        words = client.list_custom_words(limit=5)
+    assert len(words) == 1
+    assert words[0].word == "FluidVoice"
+    assert words[0].aliases == ["fluid voice"]
+
+
+@respx.mock
+def test_postprocess_no_ai_provider(settings: Settings) -> None:
+    respx.post("http://127.0.0.1:47733/v1/postprocess").mock(
+        return_value=httpx.Response(400, json={"error": "No verified AI provider selected"})
+    )
+    with FluidVoiceClient(settings) as client:
+        try:
+            client.postprocess("hello")
+            raise AssertionError("expected APIError")
+        except APIError as exc:
+            assert "AI provider" in exc.message
+            assert exc.hint is not None

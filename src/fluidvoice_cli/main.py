@@ -250,7 +250,7 @@ def run() -> None:
         app()
     except FluidVoiceError as exc:
         log_error(exc.message, hint=exc.hint)
-        raise typer.Exit(exc.exit_code) from exc
+        raise SystemExit(exc.exit_code) from None
 
 
 if __name__ == "__main__":

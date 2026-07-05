@@ -13,13 +13,15 @@ from rich.progress import BarColumn, Progress, TaskProgressColumn, TextColumn, T
 _console: Console | None = None
 _json_mode = False
 _no_color = False
+_verbose = False
 
 
 def init_output(*, json_mode: bool = False, no_color: bool = False, verbose: bool = False) -> None:
-    global _console, _json_mode, _no_color
+    global _console, _json_mode, _no_color, _verbose
     _json_mode = json_mode
     _no_color = no_color or bool(__import__("os").environ.get("NO_COLOR"))
-    _console = Console(stderr=True, no_color=_no_color, quiet=not verbose)
+    _verbose = verbose
+    _console = Console(stderr=True, no_color=_no_color)
 
 
 def get_console() -> Console:
@@ -39,6 +41,12 @@ def emit_json(payload: dict[str, Any]) -> None:
 
 def log_info(message: str) -> None:
     if _json_mode:
+        return
+    get_console().print(message)
+
+
+def log_verbose(message: str) -> None:
+    if _json_mode or not _verbose:
         return
     get_console().print(f"[dim]{message}[/dim]")
 

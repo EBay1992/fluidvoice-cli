@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import typer
-
 from fluidvoice_cli.client import FluidVoiceClient
 from fluidvoice_cli.config import Settings
 from fluidvoice_cli.errors import FluidVoiceError
@@ -24,8 +22,8 @@ def run_dict_add_word(
         else:
             log_success(f"Added custom word: {word}")
         return 0
-    except FluidVoiceError as exc:
-        raise typer.Exit(exc.exit_code) from exc
+    except FluidVoiceError:
+        raise
 
 
 def run_dict_list_words(settings: Settings, *, limit: int = 100) -> int:
@@ -37,11 +35,13 @@ def run_dict_list_words(settings: Settings, *, limit: int = 100) -> int:
             emit_json({"words": items})
         else:
             for w in words:
+                aliases = f" (aliases: {', '.join(w.aliases)})" if w.aliases else ""
+                weight = f" [weight={w.weight}]" if w.weight is not None else ""
                 detail = f" — {w.definition}" if w.definition else ""
-                log_info(f"{w.word}{detail}")
+                log_info(f"{w.word}{detail}{aliases}{weight}")
         return 0
-    except FluidVoiceError as exc:
-        raise typer.Exit(exc.exit_code) from exc
+    except FluidVoiceError:
+        raise
 
 
 def run_dict_add_replacement(
@@ -57,8 +57,8 @@ def run_dict_add_replacement(
         else:
             log_success(f"Added replacement: {original} -> {replacement}")
         return 0
-    except FluidVoiceError as exc:
-        raise typer.Exit(exc.exit_code) from exc
+    except FluidVoiceError:
+        raise
 
 
 def run_dict_list_replacements(settings: Settings, *, limit: int = 100) -> int:
@@ -72,5 +72,5 @@ def run_dict_list_replacements(settings: Settings, *, limit: int = 100) -> int:
             for r in rules:
                 log_info(f"{r.original} -> {r.replacement}")
         return 0
-    except FluidVoiceError as exc:
-        raise typer.Exit(exc.exit_code) from exc
+    except FluidVoiceError:
+        raise

@@ -58,8 +58,8 @@ class FFmpegMissingError(FluidVoiceError):
 class APIError(FluidVoiceError):
     """Unexpected API response."""
 
-    def __init__(self, status_code: int, detail: str) -> None:
-        super().__init__(f"API error {status_code}: {detail}")
+    def __init__(self, status_code: int, detail: str, *, hint: str | None = None) -> None:
+        super().__init__(f"API error {status_code}: {detail}", hint=hint)
 
 
 class BatchPartialFailureError(FluidVoiceError):

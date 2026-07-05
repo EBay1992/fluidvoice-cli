@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from typing import Literal
 
-import typer
-
 from fluidvoice_cli.client import FluidVoiceClient
 from fluidvoice_cli.config import Settings
 from fluidvoice_cli.errors import FluidVoiceError
@@ -27,5 +25,5 @@ def run_postprocess(
         else:
             write_stdout(result)
         return 0
-    except FluidVoiceError as exc:
-        raise typer.Exit(exc.exit_code) from exc
+    except FluidVoiceError:
+        raise
