@@ -7,7 +7,13 @@ Batch-transcribe media, export history, manage dictionaries, and integrate Fluid
 ## Prerequisites
 
 1. **macOS** with [FluidVoice](https://altic.dev/fluid) installed
-2. **Local API enabled**: FluidVoice → Settings → Advanced → Local API → Enable
+2. **Local API enabled** — the API is gated by a UserDefaults flag (no Settings UI in 1.6.x yet):
+
+   ```bash
+   defaults write com.FluidApp.app LocalAPIEnabled -bool true
+   ```
+
+   Restart FluidVoice, then verify: `fluidvoice doctor`
 3. **ffmpeg** (for files longer than ~4.5 minutes): `brew install ffmpeg`
 4. **Python 3.11+**
 

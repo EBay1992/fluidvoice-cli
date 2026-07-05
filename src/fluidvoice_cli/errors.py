@@ -30,8 +30,9 @@ class FluidNotRunningError(FluidVoiceError):
         super().__init__(
             f"FluidVoice Local API is not reachable at {base_url}",
             hint=(
-                "Open FluidVoice → Settings → Advanced → Local API → Enable\n"
-                "Ensure FluidVoice is running on this Mac"
+                "Enable the Local API (no Settings UI in FluidVoice 1.6.x yet):\n"
+                "  defaults write com.FluidApp.app LocalAPIEnabled -bool true\n"
+                "Then restart FluidVoice and run: fluidvoice doctor"
             ),
         )
 
