@@ -13,8 +13,28 @@ Batch-transcribe media, export history, manage dictionaries, and integrate Fluid
 
 ## Install
 
+**From GitHub (recommended until PyPI):**
+
+```bash
+pip install git+https://github.com/EBay1992/fluidvoice-cli.git
+```
+
+**From release wheel:**
+
+```bash
+pip install https://github.com/EBay1992/fluidvoice-cli/releases/download/v0.1.0/fluidvoice_cli-0.1.0-py3-none-any.whl
+```
+
+**From PyPI** (when published):
+
 ```bash
 pip install fluidvoice-cli
+```
+
+**Local install from this repo:**
+
+```bash
+./scripts/install.sh
 ```
 
 Development install:

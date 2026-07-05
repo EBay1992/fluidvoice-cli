@@ -46,8 +46,8 @@ fluidvoice = "fluidvoice_cli.main:app"
 [project.urls]
 Homepage = "https://github.com/altic-dev/FluidVoice"
 Documentation = "https://github.com/altic-dev/FluidVoice"
-Repository = "https://github.com/altic-dev/fluidvoice-cli"
-Issues = "https://github.com/altic-dev/fluidvoice-cli/issues"
+Repository = "https://github.com/EBay1992/fluidvoice-cli"
+Issues = "https://github.com/EBay1992/fluidvoice-cli/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/fluidvoice_cli"]
