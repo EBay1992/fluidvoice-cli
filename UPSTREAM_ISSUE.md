@@ -8,7 +8,13 @@ Copy the body below when opening an issue on https://github.com/altic-dev/FluidV
 
 ## Summary
 
-We've built **fluidvoice-cli** (`pip install fluidvoice-cli`), a MIT-licensed companion CLI for the FluidVoice Local API. It targets batch transcription, history export, dictionary management, and CI-friendly `--json` output.
+We've built **fluidvoice-cli**, a MIT-licensed companion CLI for the FluidVoice Local API. It targets batch transcription, history export, dictionary management, and CI-friendly `--json` output.
+
+**Install (latest v0.1.2):**
+
+```bash
+pip install https://github.com/EBay1992/fluidvoice-cli/releases/download/v0.1.2/fluidvoice_cli-0.1.2-py3-none-any.whl
+```
 
 ## Why this helps FluidVoice users
 
@@ -30,7 +36,9 @@ fluidvoice history export ./exports
 1. Link from FluidVoice README under "Developer Tools"
 2. Or vendor at `tools/fluidvoice-cli/` with shared maintainers
 
-Full proposal: [ADOPT.md](https://github.com/YOUR_ORG/fluidvoice-cli/blob/main/ADOPT.md)
+Full proposal: [ADOPT.md](https://github.com/EBay1992/fluidvoice-cli/blob/main/ADOPT.md)
+
+Repo: https://github.com/EBay1992/fluidvoice-cli
 
 ## API endpoints used
 

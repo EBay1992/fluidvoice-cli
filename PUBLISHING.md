@@ -15,7 +15,7 @@ cd fluidvoice-cli
 python -m build
 ```
 
-Artifacts land in `dist/fluidvoice_cli-0.1.0-py3-none-any.whl` and `.tar.gz`.
+Artifacts land in `dist/fluidvoice_cli-<version>-py3-none-any.whl` and `.tar.gz`.
 
 ## Test Upload (recommended first)
 
@@ -32,7 +32,7 @@ twine upload dist/*
 
 ## Upstream PR to FluidVoice
 
-After publishing v0.1.0, open an issue on [altic-dev/FluidVoice](https://github.com/altic-dev/FluidVoice/issues) with:
+Upstream adoption is tracked in [FluidVoice #529](https://github.com/altic-dev/FluidVoice/issues/529). When opening follow-up issues on [altic-dev/FluidVoice](https://github.com/altic-dev/FluidVoice/issues), use:
 
 **Title:** Official companion CLI for Local API — adoption discussion
 

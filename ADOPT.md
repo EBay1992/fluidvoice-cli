@@ -19,7 +19,7 @@ Add to FluidVoice README under "Developer Tools":
 
 ```markdown
 ### Companion CLI
-[fluidvoice-cli](https://pypi.org/project/fluidvoice-cli/) — batch transcription and scripting via the Local API.
+[fluidvoice-cli](https://github.com/EBay1992/fluidvoice-cli) — batch transcription and scripting via the Local API ([latest release](https://github.com/EBay1992/fluidvoice-cli/releases/latest)).
 ```
 
 ### Option B: Vendor into FluidVoice repo

@@ -22,7 +22,7 @@ pip install git+https://github.com/EBay1992/fluidvoice-cli.git
 **From release wheel:**
 
 ```bash
-pip install https://github.com/EBay1992/fluidvoice-cli/releases/download/v0.1.0/fluidvoice_cli-0.1.0-py3-none-any.whl
+pip install https://github.com/EBay1992/fluidvoice-cli/releases/download/v0.1.2/fluidvoice_cli-0.1.2-py3-none-any.whl
 ```
 
 **From PyPI** (when published):
